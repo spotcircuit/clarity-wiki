@@ -1,10 +1,12 @@
-# Knowledge Wiki
+# Clarity Wiki
 
-Drop files into `raw/` and run `/se:wiki-ingest` to process them into linked wiki pages.
-Use `/se:wiki-file <topic>` to capture insights from conversations.
-Run `/se:wiki-lint` periodically to check health.
+The knowledge base for SpotCircuit's agentic AI engineering practice. Built on the Karpathy LLM Wiki pattern.
 
 ---
+
+## SpotCircuit
+- [[clarity-framework]] -- Open-source agentic intelligence framework. Self-learn loop, 9 commands, 3 knowledge systems.
+- [[spotcircuit-services]] -- The 6 revenue streams: framework licensing, AI consulting, Claude Code, knowledge bases, pipelines, build in public.
 
 ## Patterns
 - [[correlation-id]] -- Track execution across services and logs. Single most important debug tool.
