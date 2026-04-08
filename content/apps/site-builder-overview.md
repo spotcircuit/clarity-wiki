@@ -1,6 +1,6 @@
 # Site Builder
 
-#platform #site-builder #tool #revenue
+#apps #site-builder #tool #revenue
 
 Google Maps business listing to deployed React website in 60 seconds. Scrape, generate AI content, build, deploy, edit inline.
 

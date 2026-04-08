@@ -1,6 +1,6 @@
 # AI Content Pipeline
 
-#platform #site-builder #ai #claude #gemini
+#apps #site-builder #ai #claude #gemini
 
 Hybrid AI approach: Claude Sonnet generates website copy, Gemini 2.5 Flash generates hero/about images. Config-driven, model-swappable.
 

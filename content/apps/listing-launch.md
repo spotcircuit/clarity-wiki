@@ -1,6 +1,6 @@
 # Listing Launch
 
-#platform #reference #real-estate #content-gen
+#apps #reference #real-estate #content-gen
 
 Real estate marketing content generator. 4-step wizard: address autocomplete → scrape property → generate multi-channel content (MLS, Instagram, Facebook, Email, Flyer) with HUD Fair Housing compliance.
 

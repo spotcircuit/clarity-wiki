@@ -1,6 +1,6 @@
 # Orchestrator 3 Stream
 
-#platform #reference #orchestrator #pre-paperclip
+#apps #reference #orchestrator #pre-paperclip
 
 Multi-agent orchestration platform with real-time WebSocket streaming, PostgreSQL persistence, and chat autocomplete expert. **Pre-Paperclip** — built before Paperclip existed, now superseded for orchestration duties.
 

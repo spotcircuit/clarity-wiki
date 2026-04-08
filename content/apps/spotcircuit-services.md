@@ -1,6 +1,6 @@
 # SpotCircuit Services
 
-#platform #spotcircuit #services #revenue
+#apps #spotcircuit #services #revenue
 
 SpotCircuit is an agentic AI engineering practice. Six revenue streams, all built on the Clarity Framework.
 

@@ -1,6 +1,6 @@
 # GetRankedLocal
 
-#platform #product #local-seo #grid-search #playwright #lead-gen
+#apps #product #local-seo #grid-search #playwright #lead-gen
 
 Google Maps ranking analysis and lead generation platform. 169-point grid searches show exactly where a business ranks across their entire service area.
 

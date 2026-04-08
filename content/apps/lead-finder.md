@@ -1,6 +1,6 @@
 # Lead Finder
 
-#platform #reference #scraping #lead-gen
+#apps #reference #scraping #lead-gen
 
 Multi-source real estate lead prospecting tool. Scrapes Zillow FSBO, Craigslist, Redfin with Playwright + generates AI outreach pitches with Claude Haiku.
 
