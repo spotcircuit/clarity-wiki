@@ -16,6 +16,20 @@ Products and tools we build and ship.
 - [[site-builder-overview]] -- Google Maps to deployed React site in 60s. Full pipeline.
 - [[getrankedlocal]] -- Google Maps 169-point grid ranking analysis + lead gen platform.
 - [[ai-content-pipeline]] -- Claude for copy + Gemini for images. Config-driven, model-swappable.
+- [[drcoins]] -- Oh Deer Coins. LiveMe Coins e-commerce platform. Next.js 15.5 + React 19.
+- [[seosnap]] -- AI-powered SEO audit tool. Playwright + Lighthouse + GPT-5 Nano recommendations.
+- [[service-marketplace]] -- Niche-agnostic service marketplace. Directory + lead gen + Stripe subscriptions.
+- [[leadfinder-overview]] -- Production lead gen. Google Maps scraping + AI enrichment + FastAPI.
+- [[invoicedb]] -- Invoice database with agentic AI workflows (ADW system).
+- [[agentic-agent]] -- Multi-agent orchestration platform. WebSocket streaming + PostgreSQL + cost tracking.
+- [[sopify]] -- Loom video to Notion SOP converter via n8n webhooks.
+- [[tube2link]] -- YouTube to LinkedIn post converter. Caption extraction + AI generation.
+- [[airecruiter]] -- AI recruiting platform. ATS Kanban, resume parsing, smart matching, Stripe.
+- [[weatherproof-overview]] -- Construction weather delay tracking + insurance claim PDF generation.
+- [[atlasly]] -- Schema-driven business directory. Mapbox + Typesense geo search + Stripe.
+- [[bidgeniusai]] -- AI-powered RFP bidding tool for government/enterprise contracts.
+- [[aduplanner]] -- ADU planning with GPT-4 Vision satellite imagery analysis + Google Maps.
+- [[make-2-n8n]] -- Make.com to n8n workflow converter and pricing calculator.
 - [[lead-finder]] -- (Reference) Multi-source lead scraper + AI pitch gen.
 - [[listing-launch]] -- (Reference) Real estate multi-channel content generator.
 - [[orchestrator-3-stream]] -- (Reference) Pre-Paperclip multi-agent orchestrator. Superseded.
