@@ -17,17 +17,40 @@ Shared deployment infrastructure across all SpotCircuit apps.
 
 Railway hosts Python/Flask backends. CLI installed (`railway 4.8.0`).
 
-| Project | Purpose |
-|---|---|
-| Site Builder | FastAPI backend for site generation pipeline |
-| getrankedlocal | Python/Flask scraper for grid search Playwright automation |
-| Agent Experts - Orchestrator | Pre-Paperclip orchestrator (likely deprecated) |
-| Digitize-Invoices | Invoice processing |
-| valiant-creation | Unknown |
-| dependable-expression | Unknown |
-| tac | Unknown |
+| Project | Repo | Language | Purpose |
+|---|---|---|---|
+| Site Builder | spotcircuit/site-builder | Python | FastAPI backend for site generation pipeline |
+| getrankedlocal | spotcircuit/getrankedlocal | Python | Flask scraper for grid search Playwright |
+| Agent Experts - Orchestrator | spotcircuit/agent-experts | Python | Pre-Paperclip orchestrator (deprecated) |
+| Digitize-Invoices | spotcircuit/invoicedb | Python | Invoice database with agentic AI workflows |
+| tac | spotcircuit/tac-8 (latest) | Python | TAC project (5 iterations: tac-4 through tac-8) |
+| valiant-creation | ? | ? | Unknown Railway project |
+| dependable-expression | ? | ? | Unknown Railway project |
 
 Railway auto-deploys from standalone GitHub repos on push to main.
+
+## Full GitHub Repo Inventory (Docker-ready)
+
+All of these have Dockerfiles and are Railway-deployable:
+
+| Repo | Language | Description |
+|---|---|---|
+| spotcircuit/site-builder | Python | Google Maps to React site in 60s |
+| spotcircuit/getrankedlocal | TypeScript | Local SEO grid ranking + lead gen |
+| spotcircuit/seosnap | TypeScript | AI-powered SEO audit with Lighthouse + GPT-5 |
+| spotcircuit/TextPRO | Python | Backend services with AI Developer Workflow |
+| spotcircuit/prior-auth-fastlane | Python | Healthcare prior-auth SaaS MVP |
+| spotcircuit/invoicedb | Python | Invoice database with agentic AI |
+| spotcircuit/service-marketplace | TypeScript | Next.js service marketplace platform |
+| spotcircuit/leadfinder | Python | Lead finder (original) |
+| spotcircuit/leadfinder_parallel | Python | Lead finder (parallel version) |
+| spotcircuit/chopshop | TypeScript | TBD |
+| spotcircuit/parcelaudit | TypeScript | TBD |
+| spotcircuit/velocityelectric | TypeScript | TBD |
+| spotcircuit/drcoins | TypeScript | TBD |
+| spotcircuit/roofmaster | TypeScript | TBD |
+| spotcircuit/TruckingAIO | TypeScript | TBD |
+| spotcircuit/tac-4 through tac-8 | Python | TAC iterations |
 
 ## Vercel
 
