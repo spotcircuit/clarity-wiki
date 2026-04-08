@@ -28,6 +28,7 @@ The knowledge base for SpotCircuit's agentic AI engineering practice. Built on t
 - [[orchestrator-3-stream]] -- (Reference) Pre-Paperclip multi-agent orchestrator. Superseded.
 - [[lead-finder]] -- (Reference) Multi-source lead scraper + AI pitch gen.
 - [[listing-launch]] -- (Reference) Real estate multi-channel content generator.
+- [[getrankedlocal]] -- Google Maps 169-point grid ranking analysis + lead gen platform.
 
 ## Decisions
 - [[karpathy-wiki-comparison]] -- LLM Wiki vs Clarity. Gaps, advantages, bridge plan.
