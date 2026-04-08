@@ -29,6 +29,7 @@ The knowledge base for SpotCircuit's agentic AI engineering practice. Built on t
 - [[lead-finder]] -- (Reference) Multi-source lead scraper + AI pitch gen.
 - [[listing-launch]] -- (Reference) Real estate multi-channel content generator.
 - [[getrankedlocal]] -- Google Maps 169-point grid ranking analysis + lead gen platform.
+- [[infrastructure]] -- Shared deployment: Railway, Vercel, Cloudflare, Neon, Paperclip, GitHub Pages.
 
 ## Decisions
 - [[karpathy-wiki-comparison]] -- LLM Wiki vs Clarity. Gaps, advantages, bridge plan.
