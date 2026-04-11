@@ -4,6 +4,12 @@ The knowledge base for SpotCircuit's agentic AI engineering practice. Built on t
 
 ---
 
+- [[linkedin-post-2026-04-08]] -- LinkedIn post: clarity (2026-04-08)
+- [[linkedin-post-2026-04-09]] -- LinkedIn post: clarity (2026-04-09)
+- [[social-post-2026-04-10]] -- Social post: casestudy (2026-04-10)
+## Start Here
+- [[clarity-system-guide]] -- Complete system guide. How to use the framework, directory map, commands, agents, scout pipeline. READ THIS FIRST.
+
 ## Platform
 The framework, orchestration, and infrastructure that everything runs on.
 - [[clarity-framework]] -- Open-source agentic intelligence framework. Self-learn loop, 9 commands, 3 knowledge systems.
