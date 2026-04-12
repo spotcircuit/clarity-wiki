@@ -1,37 +1,79 @@
-# Correlation ID Pattern
+# Correlation ID
 
-#patterns #observability #logging #tracing
+Track a single request or operation across multiple services, logs, and async steps. When something fails at step 5, you can trace back through steps 1-4 without grepping timestamps.
 
-A correlation ID is a unique identifier set at the entry point of any processing flow and passed through every step, node, and external call. It makes a single execution traceable across services, logs, and external systems without a distributed tracing infrastructure.
+## The pattern
 
-## The Pattern
+Generate a unique ID at the entry point. Pass it through every service call, log line, database write, and queue message. Every log line includes the correlation ID so you can filter the entire request lifecycle.
 
-1. **Set at entry** -- generate a UUID (or accept one from the caller) at the first node/handler before any other work.
-2. **Never replace the message object** -- carry the ID as a field on the existing message, not as a wrapper or replacement.
-3. **Include in every log line** -- every log statement emits `correlationId` alongside the message and context.
-4. **Pass to external systems** -- use the `X-Correlation-Id` HTTP header on all outbound calls so downstream services can log it too.
-5. **Return to callers** -- include the ID in error responses so the caller can reference it in support requests.
+```python
+import uuid
+from contextvars import ContextVar
 
-## Why It Matters
+# Thread-safe correlation ID (works with asyncio)
+correlation_id: ContextVar[str] = ContextVar('correlation_id', default='')
 
-Without a correlation ID, a failure in a multi-step pipeline produces logs scattered across nodes with no way to reconstruct which records belong to the same execution. With one, a single ID surfaces the complete execution trace.
+def new_correlation_id() -> str:
+    """Generate and set a new correlation ID. Call once at request entry point."""
+    cid = uuid.uuid4().hex[:12]
+    correlation_id.set(cid)
+    return cid
 
-## Implementation Notes
+def get_correlation_id() -> str:
+    return correlation_id.get()
+```
 
-- If the incoming request already contains a correlation ID header, use it rather than generating a new one. This preserves traceability across system boundaries.
-- Store the ID in a consistent field name (e.g. `msg.correlationId` or `context.traceId`) and document that field name in the service's readme.
-- Short-lived IDs are fine -- they only need to survive one execution, not forever.
+## Middleware (FastAPI example)
 
-## Anti-Patterns
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
 
-- Generating a new ID mid-flow (breaks the trace).
-- Logging without including the ID (defeats the purpose).
-- Replacing the full message object in a node (loses the ID).
+class CorrelationMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        # Accept from upstream or generate new
+        cid = request.headers.get("X-Correlation-ID") or new_correlation_id()
+        correlation_id.set(cid)
 
-Source: Derived from distributed systems tracing practices. Validated in multi-step integration flows 2026-04.
+        response = await call_next(request)
+        response.headers["X-Correlation-ID"] = cid
+        return response
+```
+
+## In logs
+
+```python
+import logging
+
+class CorrelationFilter(logging.Filter):
+    def filter(self, record):
+        record.correlation_id = get_correlation_id()
+        return True
+
+# Format: [a3f82b1c9d01] 2026-04-10 14:23:01 Starting pipeline step 3
+formatter = logging.Formatter('[%(correlation_id)s] %(asctime)s %(message)s')
+```
+
+## In async pipelines
+
+The site-builder pipeline passes a job_id through all 7 steps. Each step logs with the job_id, the WebSocket broadcasts include it, and the error log records it. When a Cloudflare deploy fails, you trace back through the generation, scraping, and parsing steps for that specific job.
+
+```python
+async def run_pipeline(job_id: str, maps_url: str):
+    correlation_id.set(job_id)
+    logger.info("Starting pipeline")           # [job_abc123] Starting pipeline
+    data = await scrape_maps(maps_url)          # [job_abc123] Scraping maps.google.com
+    content = await generate_content(data)      # [job_abc123] Claude returned 2.3KB
+    await deploy(content)                       # [job_abc123] Deployed to xyz.pages.dev
+```
+
+## When to use it
+
+- Multi-step pipelines (like site-builder's 7-step generation)
+- Microservice architectures where a request crosses service boundaries
+- Async job processing where the request and the work happen at different times
+- Any system where "what happened to request X?" is a frequent debugging question
 
 ## Related
 
-- [[patterns/error-handling]] -- error logs must include correlationId
-- [[patterns/idempotency-guard]] -- idempotency keys and correlation IDs are related but distinct
-- [[patterns/pre-release-checklist]] -- verify correlation ID is wired through before release
+- [Idempotency Guard](idempotency-guard.md) -- Often paired with correlation IDs (the ID also serves as the idempotency key)
+- [Config-Driven Routing](config-driven-routing.md) -- Routing decisions can be logged with correlation IDs for auditability

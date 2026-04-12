@@ -1,55 +1,94 @@
-# Config-Driven Routing Pattern
+# Config-Driven Routing
 
-#patterns #architecture #extensibility #routing
+Put routing logic in configuration, not code. When the routing rules change, update a config file or YAML entry instead of modifying application code, running tests, and redeploying.
 
-Routing logic as data, not code. Processing rules live in configuration records rather than in flow branches or conditionals. Adding a new input type means adding a config record -- zero code changes, zero deployments.
+## The pattern
 
-## The Pattern
+Define routing rules as data. The application reads the rules and applies them. Adding a new route means adding a config entry, not a code change.
 
-1. **Config records map input type to processing rules** -- a record store holds entries like `{ inputType: "TYPE_A", processor: "handler-a", schema: "schema-a", validations: [...] }`.
-2. **Flow reads config at runtime** -- the flow looks up the config record for the incoming type, then routes accordingly.
-3. **No hardcoded branches** -- the flow does not have a switch/case or if/else for each type. It has one lookup and one dispatch.
-4. **Per-source configuration profiles** -- different sources can have different rules for the same logical type (e.g., partner A sends dates as YYYY-MM-DD, partner B sends them as epoch ms -- the config record handles the difference).
+```yaml
+# deploy_routing.yaml
+routes:
+  - match: { deploy_target: "cloudflare" }
+    handler: cloudflare_deployer
+    config:
+      api_token_env: CLOUDFLARE_API_TOKEN
+      account_id_env: CLOUDFLARE_ACCOUNT_ID
 
-## Structure
+  - match: { deploy_target: "vercel" }
+    handler: vercel_deployer
+    config:
+      token_env: VERCEL_TOKEN
+
+  - match: { deploy_target: "auto" }
+    handler: auto_select
+    priority: [cloudflare_deployer, vercel_deployer]
+    rule: "first configured provider wins"
+
+  - match: { deploy_target: "none" }
+    handler: skip
+    note: "local preview only, no deployment"
+```
+
+## Router implementation
+
+```python
+class ConfigRouter:
+    def __init__(self, routes: list[dict]):
+        self._routes = routes
+
+    def resolve(self, **context) -> dict:
+        """Find the first matching route for the given context."""
+        for route in self._routes:
+            if all(context.get(k) == v for k, v in route["match"].items()):
+                return route
+        raise NoRouteError(f"No route matches: {context}")
+```
+
+## Real example: site-builder deploy resolution
+
+The site-builder uses this pattern for choosing where to deploy generated sites. From the expertise.yaml:
 
 ```
-[ingest] --> [lookup config by type] --> [apply config-specified processor]
-                        |
-                [config record store]
-                  type | processor | schema | rules | source_profile
-                  -----+-----------+--------+-------+---------------
-                  TYPE_A | handler-a | schema-a | [...] | default
-                  TYPE_B | handler-b | schema-b | [...] | default
-                  TYPE_A | handler-a | schema-a | [...] | partner-x
+Auto-selection priority:
+1. If user explicitly picks "cloudflare" or "vercel", use that
+2. If "auto" or unset: prefer Cloudflare if configured, else Vercel
+3. If "none": skip deployment entirely (local preview only)
 ```
 
-## Why It Matters
+This is config, not a chain of if/else statements. Adding a new deploy target (Netlify, S3, etc.) means adding a config entry and a deployer module. The pipeline orchestrator does not change.
 
-Code-driven routing creates a deployment dependency for every new type. Product teams, clients, or operators cannot add types without an engineer. Config-driven routing moves that power to whoever manages the config store -- often ops or the client themselves.
+## Real example: Node-RED flow routing (Acme Integration)
 
-## When to Use It
+The push agent routes flow deployments based on configuration:
 
-- When the set of input types is expected to grow over time.
-- When different sources send the same data in different formats.
-- When non-engineers need to be able to add or modify routing rules.
-- When you want to A/B test processors without a code change.
+```yaml
+deployment:
+  environments:
+    staging:
+      tenant_id_env: STAGING_TENANT_ID
+      auto_deploy: true
+    production:
+      tenant_id_env: PROD_TENANT_ID
+      auto_deploy: false  # manual promotion only
+```
 
-## When Not to Use It
+Adding a new environment (QA, load-test, demo) means adding a YAML entry. The push agent reads the config and deploys accordingly. No code changes needed.
 
-- When the routing logic is inherently complex and conditional (config becomes unreadable).
-- When there are only 2-3 types that will never grow (over-engineering).
+## When to use it
 
-## Implementation Notes
+- Multiple deployment targets or environments
+- Feature flags and A/B routing
+- Multi-tenant systems where tenants have different configurations
+- Any place where `if provider == "x"` chains are growing
 
-- Config records should be versioned. Changing a config record is a deployment event even if no code changed.
-- Include a `source_profile` or `partner` field from the start, even if all sources use the same config initially. Retrofitting it later requires a migration.
-- Cache config lookups if the record store has high latency -- but invalidate the cache on config changes.
+## When not to use it
 
-Source: Derived from integration extensibility patterns. Validated in multi-format processing work 2026-04.
+- Simple two-way decisions that will not grow
+- Performance-critical hot paths where config lookup overhead matters
+- Routing logic that requires complex computation (use code, not config)
 
 ## Related
 
-- [[patterns/mock-data-strategy]] -- mock configs can test new types before real data arrives
-- [[patterns/error-handling]] -- unknown types (no config found) are unrecoverable errors
-- [[decisions/multi-format-ingest-strategy]] -- config-driven routing is the core of the hybrid ingest approach
+- [Correlation ID](correlation-id.md) -- Route decisions can be logged with correlation IDs for debugging
+- [Idempotency Guard](idempotency-guard.md) -- Idempotency TTL can be configured per-route
